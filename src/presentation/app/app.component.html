@@ -1,0 +1,14 @@
+<mat-form-field>
+  <mat-label>Toppings</mat-label>
+  <mat-select [(ngModel)]="level">
+    <mat-option [value]="level.value"
+                *ngFor="let level of levelList">{{level.text}}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+
+<app-board *ngIf="level"
+           [levelUser]="level"
+           [rows]="0"
+           [cols]="0"
+           [minesUser]="20"></app-board>
