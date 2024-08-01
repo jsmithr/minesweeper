@@ -1,0 +1,27 @@
+<div class="scoreboard">
+  <div class="scoreboard__flag">
+    <span>099</span>
+  </div>
+  <div class="scoreboard__retry"
+       (click)="retryGame()">
+    <img [class.scoreboard__retry--show]="minesweeper.getStatusGame().normal"
+         src="/presentation/assets/img/happy.png"
+         alt="happy-face"
+         aria-label="Cara feliz">
+    <img [class.scoreboard__retry--show]="minesweeper.getStatusGame().click"
+         src="/presentation/assets/img/surprise.png"
+         alt="doing-click"
+         aria-label="Haciendo clic">
+    <img [class.scoreboard__retry--show]="minesweeper.getStatusGame().win"
+         src="/presentation/assets/img/winner.png"
+         alt="win"
+         aria-label="Ganador">
+    <img [class.scoreboard__retry--show]="minesweeper.getStatusGame().lose"
+         src="/presentation/assets/img/loser.png"
+         alt="loser"
+         aria-label="Juego perdido">
+  </div>
+  <div class="scoreboard__time">
+    <span>{{getTime()}}</span>
+  </div>
+</div>

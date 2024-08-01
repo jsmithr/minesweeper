@@ -1,14 +1,19 @@
-<mat-form-field>
-  <mat-label>Toppings</mat-label>
-  <mat-select [(ngModel)]="level">
-    <mat-option [value]="level.value"
-                *ngFor="let level of levelList">{{level.text}}</mat-option>
-  </mat-select>
-</mat-form-field>
+<p-dropdown [options]="levelList"
+            [(ngModel)]="level"
+            (onChange)="setLevel($event)"
+            optionLabel="text"
+            placeholder="Seleccione el nivel" />
 
+<div class="app__container">
+  <div>
+    <app-scoreboard></app-scoreboard>
+  </div>
+  <div>
+    <app-board *ngIf="level"
+               [levelUser]="level.code"
+               [rows]="0"
+               [cols]="0"
+               [minesUser]="20"></app-board>
 
-<app-board *ngIf="level"
-           [levelUser]="level"
-           [rows]="0"
-           [cols]="0"
-           [minesUser]="20"></app-board>
+  </div>
+</div>

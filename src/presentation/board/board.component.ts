@@ -1,7 +1,9 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, HostListener, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Board } from 'src/data/board';
 import { Cell } from 'src/data/cell';
 import { Mine } from 'src/data/mine';
+import { Level } from 'src/domain/model/level.model';
+import { MinesweeperService } from 'src/domain/services/minesweeper/minesweeper.service';
 
 @Component({
   selector: 'app-board',
@@ -11,18 +13,32 @@ import { Mine } from 'src/data/mine';
 export class BoardComponent implements OnInit, OnChanges {
   @Input() cols: number;
   @Input() rows: number;
-  @Input() levelUser: 'easy' | 'medium' | 'hard' | 'custom';
+  @Input() levelUser: Level;
   @Input() minesUser: number = 0;
   board: Cell[][];
   mines: Mine[];
   sizeBoard: { rows: number, cols: number };
 
-  ngOnInit(): void {
+  constructor(public minesweeperService: MinesweeperService) {
+
   }
+
+  ngOnInit(): void {
+    this.minesweeperService.setResetBoard(() => this.initGame());
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
+    this.initGame();
+  }
+
+  conextMenu(event: any) {
+    event.preventDefault();
+  }
+
+  initGame() {
     this.sizeBoard = this.getSizeBoard();
     this.board = this.generateBoard();
-    this.setPositionMines(this.getCountMines());
+    this.mines = this.setPositionMines(this.getCountMines());
     this.setValueCell();
   }
 
@@ -30,7 +46,7 @@ export class BoardComponent implements OnInit, OnChanges {
     const leves = {
       easy: { rows: 8, cols: 8 },
       medium: { rows: 16, cols: 16 },
-      hard: { rows: 30, cols: 16 },
+      hard: { rows: 16, cols: 30 },
       custom: { rows: this.rows, cols: this.cols },
     }
     return leves[this.levelUser];
@@ -68,7 +84,7 @@ export class BoardComponent implements OnInit, OnChanges {
       this.board[row][col].value = -1;
       mines.push({ col, row });
     }
-    this.mines = mines;
+    return mines;
   }
 
   setValueCell() {
@@ -90,23 +106,61 @@ export class BoardComponent implements OnInit, OnChanges {
           }
         }
 
-        this.board[r][c].value = countNeighbors;
+        cell.value = countNeighbors;
       })
     });
   }
 
-  showValueCell(cell: Cell) {
-    cell.status = 'S';
-    if (cell.value == -1) {
-      this.gameOver();
+  onClickCell(cell: Cell, row: number, col: number, event: any) {
+    this.minesweeperService.setStatusGame('click');
+
+    if (cell.status === 'H' && event.which === 3) {
+      cell.status = 'M';
+      return;
+    }
+
+    if (cell.status == 'M') {
+      cell.status = 'H';
+      return
+    } else if (cell.status == 'H')
+      cell.status = 'S';
+
+    switch (cell.value) {
+      case 0:
+        this.showArea(row, col);
+        break;
+      case -1:
+        cell.value = -2;
+        this.gameOver();
+        break;
+
+      default:
+        break;
     }
   }
 
   gameOver() {
     this.board.forEach((row, r) => {
       row.forEach((cell, c) => {
-        cell.status = 'S';
+        if (cell.value == -1)
+          cell.status = 'S';
       })
     });
+    this.minesweeperService.gameOver();
+  }
+
+  showArea(row: number, col: number) {
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
+        let rowAround = row + i, colAround = col + j
+        if (this.board[rowAround] && this.board[rowAround][colAround] && this.board[rowAround][colAround].status == 'H') {
+          if (this.board[rowAround][colAround].value == 0) {
+            this.board[rowAround][colAround].status = 'S';
+            this.showArea(rowAround, colAround);
+          } else if (this.board[rowAround][colAround].value > 0)
+            this.board[rowAround][colAround].status = 'S';
+        }
+      }
+    }
   }
 }

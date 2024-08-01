@@ -1,0 +1,36 @@
+.scoreboard {
+  display: flex;
+  justify-content: space-between;
+
+  &__flag {
+  }
+  &__retry {
+    background-color: #d5d5d5;
+    border-left: 3px solid #fbfbfb;
+    border-top: 3px solid #fbfbfb;
+    border-right: 3px solid #959595;
+    border-bottom: 3px solid #959595;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px;
+
+    img {
+      width: 24px;
+      display: none;
+    }
+
+    &--show {
+      display: block !important;
+    }
+  }
+  &__time {
+  }
+
+  span {
+    font-family: "PhoneTimeDate";
+    font-size: 30px;
+    color: red;
+    background-color: #000;
+  }
+}

@@ -1,17 +1,34 @@
 <div class="board">
-  <table class="board__table">
+  <table class="board__table"
+         [class.board__table--not-clickeable]="minesweeperService.getStatusGame().lose">
     <tbody>
-      <tr *ngFor="let cells of board">
-        <td *ngFor="let cell of cells"
-            (click)="showValueCell(cell)"
-            class="board__cell board__cell--{{cell.status}}  board__cell--{{cell.value}} blinker-bold">
+      <tr *ngFor="let cells of board; index as i">
+        <td *ngFor="let cell of cells; index as j"
+            (mousedown)="onClickCell(cell, i, j, $event)"
+            (mouseup)="minesweeperService.setStatusGame('normal')"
+            (contextmenu)="conextMenu($event)"
+            class="board__cell board__cell--{{cell.status}}  board__cell--{{cell.value}} blinker-bold"
+            [class.board__cell--burst]="cell.value == -2">
           <span *ngIf="cell.value > 0 && cell.status == 'S'">{{cell.value}}</span>
+
           <img *ngIf="cell.status == 'M'"
                src="/presentation/assets/img/flag.svg"
                alt="flag"
                aria-label="Marcado">
+
+          <img *ngIf="minesweeperService.getStatusGame().lose && cell.value == -1 || cell.value == -2"
+               src="/presentation/assets/img/bomb.svg"
+               alt="bomb"
+               aria-label="Bomba">
         </td>
       </tr>
     </tbody>
   </table>
+</div>
+
+<div style="position: absolute; display: none;top: -100px;">
+  <img src="/presentation/assets/img/flag.svg"
+       width="10px">
+  <img src="/presentation/assets/img/bomb.svg"
+       width="10px">
 </div>

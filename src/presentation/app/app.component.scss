@@ -1,0 +1,23 @@
+.app {
+  &__container {
+    background-color: #bdbdbd;
+    max-width: fit-content;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+
+    border-left: 3px solid #fbfbfb;
+    border-top: 3px solid #fbfbfb;
+    border-right: 3px solid #959595;
+    border-bottom: 3px solid #959595;
+
+    div {
+      border-right: 3px solid #fbfbfb;
+      border-bottom: 3px solid #fbfbfb;
+      border-left: 3px solid #959595;
+      border-top: 3px solid #959595;
+    }
+  }
+}

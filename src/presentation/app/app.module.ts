@@ -5,18 +5,20 @@ import { AppComponent } from './app.component';
 import { BoardComponent } from '../board/board.component';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSelectModule } from '@angular/material/select';
+import { DropdownModule } from 'primeng/dropdown';
+import { ScoreboardComponent } from '../scoreboard/scoreboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BoardComponent
+    BoardComponent,
+    ScoreboardComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     BrowserAnimationsModule,
-    MatSelectModule
+    DropdownModule
   ],
   providers: [],
   bootstrap: [AppComponent]
