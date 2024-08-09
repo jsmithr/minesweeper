@@ -39,6 +39,7 @@ export class BoardComponent implements OnInit, OnChanges {
     this.sizeBoard = this.getSizeBoard();
     this.board = this.generateBoard();
     this.mines = this.setPositionMines(this.getCountMines());
+    this.minesweeperService.setMinesAvailable(this.mines.length);
     this.setValueCell();
   }
 
@@ -116,11 +117,13 @@ export class BoardComponent implements OnInit, OnChanges {
 
     if (cell.status === 'H' && event.which === 3) {
       cell.status = 'M';
+      this.minesweeperService.setMinesAvailable(this.minesweeperService.getMinesAvailable() - 1);
       return;
     }
 
     if (cell.status == 'M') {
       cell.status = 'H';
+      this.minesweeperService.setMinesAvailable(this.minesweeperService.getMinesAvailable() + 1);
       return
     } else if (cell.status == 'H')
       cell.status = 'S';

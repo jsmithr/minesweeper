@@ -16,6 +16,7 @@ export class MinesweeperService {
 
   private level: Level = 'easy';
   private statusGame: GAME_TYPE;
+  private minesAvailable: number;
   private resetBoard: any;
 
   constructor() { }
@@ -27,6 +28,14 @@ export class MinesweeperService {
       normal: true,
       click: false
     };
+  }
+
+  setMinesAvailable(mines: number) {
+    this.minesAvailable = mines;
+  }
+
+  getMinesAvailable() {
+    return this.minesAvailable;
   }
 
   setLevel(level: Level) {
