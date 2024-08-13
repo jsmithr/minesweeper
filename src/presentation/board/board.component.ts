@@ -18,6 +18,7 @@ export class BoardComponent implements OnInit, OnChanges {
   board: Cell[][];
   mines: Mine[];
   sizeBoard: { rows: number, cols: number };
+  amountWrongFlags: number = 0;
 
   constructor(public minesweeperService: MinesweeperService) {
 
@@ -113,33 +114,40 @@ export class BoardComponent implements OnInit, OnChanges {
   }
 
   onClickCell(cell: Cell, row: number, col: number, event: any) {
+    if (!this.minesweeperService.isPlaying())
+      this.minesweeperService.initGame();
+
     this.minesweeperService.setStatusGame('click');
 
     if (cell.status === 'H' && event.which === 3) {
       cell.status = 'M';
       this.minesweeperService.setMinesAvailable(this.minesweeperService.getMinesAvailable() - 1);
-      return;
-    }
 
-    if (cell.status == 'M') {
+      if (cell.value !== -1)
+        this.amountWrongFlags++;
+    } else if (cell.status == 'M') {
       cell.status = 'H';
       this.minesweeperService.setMinesAvailable(this.minesweeperService.getMinesAvailable() + 1);
-      return
-    } else if (cell.status == 'H')
+
+      if (cell.value !== -1)
+        this.amountWrongFlags--;
+    } else if (cell.status == 'H') {
       cell.status = 'S';
 
-    switch (cell.value) {
-      case 0:
-        this.showArea(row, col);
-        break;
-      case -1:
-        cell.value = -2;
-        this.gameOver();
-        break;
+      switch (cell.value) {
+        case 0:
+          this.showArea(row, col);
+          break;
+        case -1:
+          cell.value = -2;
+          this.gameOver();
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
     }
+    this.validateWinner();
   }
 
   gameOver() {
@@ -165,5 +173,15 @@ export class BoardComponent implements OnInit, OnChanges {
         }
       }
     }
+  }
+
+  validateMineFlags() {
+    let markedMines = this.mines.filter(m => this.board[m.row][m.col].status === 'M' && this.board[m.row][m.col].value === -1)
+    return markedMines.length === this.mines.length;
+  }
+
+  validateWinner() {
+    if (this.validateMineFlags() && this.minesweeperService.getMinesAvailable() === 0 && this.amountWrongFlags == 0)
+      this.minesweeperService.setStatusGame('win');
   }
 }

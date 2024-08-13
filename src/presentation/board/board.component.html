@@ -1,6 +1,6 @@
 <div class="board">
   <table class="board__table"
-         [class.board__table--not-clickeable]="minesweeperService.getStatusGame().lose">
+         [class.board__table--not-clickeable]="minesweeperService.getStatusGame().lose || minesweeperService.getStatusGame().win">
     <tbody>
       <tr *ngFor="let cells of board; index as i">
         <td *ngFor="let cell of cells; index as j"

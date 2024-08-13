@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.primengConfig.ripple = true;
-    this.minesweeperService.initGame();
+    this.minesweeperService.resetGame();
   }
 
   setLevel(levelSelected: any) {

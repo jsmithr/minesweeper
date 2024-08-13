@@ -18,16 +18,12 @@ export class MinesweeperService {
   private statusGame: GAME_TYPE;
   private minesAvailable: number;
   private resetBoard: any;
+  private beginGame: any = false;
 
   constructor() { }
 
   initGame() {
-    this.statusGame = {
-      win: false,
-      lose: false,
-      normal: true,
-      click: false
-    };
+    this.beginGame = true;
   }
 
   setMinesAvailable(mines: number) {
@@ -59,6 +55,10 @@ export class MinesweeperService {
     return this.statusGame;
   }
 
+  isPlaying(): boolean {
+    return this.beginGame;
+  }
+
   setResetBoard(funcReset: any) {
     this.resetBoard = funcReset;
   }
@@ -72,7 +72,15 @@ export class MinesweeperService {
   }
 
   resetGame() {
-    this.initGame();
-    this.resetBoard();
+    this.statusGame = {
+      win: false,
+      lose: false,
+      normal: true,
+      click: false
+    };
+    this.beginGame = false;
+
+    if (this.resetBoard)
+      this.resetBoard();
   }
 }
